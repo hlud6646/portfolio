@@ -1,0 +1,125 @@
+* {
+ box-sizing: border-box;
+}
+*:before,
+*:after {
+ box-sizing: border-box;
+}
+
+
+html{ height: 100%;
+	  position: relative;}
+
+body {
+	background-color: #FFFAFC;
+	margin: 0;
+	padding-bottom: 6rem;
+	height: 100%;
+}
+
+.container {
+	min-height: 100vh;
+	overflow: hidden;
+	display: block;
+	position: relative;
+	padding-bottom: 56px;
+	background-color: #FFFFFF;
+}
+
+footer {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	padding: 1rem;
+	text-align: center;
+	height: 56px;
+}
+
+
+#socials-toolbar{
+	background-color: #090607;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	text-align: right;
+	width: 99.9%;
+
+}
+
+#socials-container{
+	padding-bottom: 20px;
+}
+
+
+
+/* I like the menu on NYBooks so here it is, more or less.*/
+.navigation_bar	{
+	float: left;
+	clear: both;
+	margin: 0, 0, 20;
+	padding: 1px 0;
+	width: 100%;
+	border-top: solid 2px #000;
+	border-bottom: solid 2px #000;
+}
+
+.navigation_bar ul {
+	padding: 0;
+	float: left;
+    margin: 0;
+    list-style-type: none;
+    width: 99.9%;
+    border-top: solid 1px #000;
+    border-bottom: solid 1px #000;
+    border-right: solid 1px #ccc;
+}
+
+
+.navigation_bar li {
+	text-align: center;
+	margin: 0;
+	padding: 0;
+	float: left;
+	font-size: 13px;
+	width: 16.6666%;
+	border-left: solid 1px #ccc;
+	position: relative;
+}
+
+.navigation_bar a {
+  /*float: center;*/
+  display: block;
+  padding: 6px 0;
+  color: #90AFC5;
+  text-decoration: none;
+}
+
+.navigation_bar a:hover {
+  background-color: #90AFC5;
+  color: black;
+}
+
+.navigation_bar a.active {
+  background-color: #90AFC5;
+  color: black;
+}
+
+
+.source a {
+	color: #031344;
+}
+
+
+
+
+
+
+
+
+.stream_wrapper img {
+	padding: 20px 0;
+}
+
+
+
+
+

@@ -1,0 +1,141 @@
+{% extends "layout.html" %}
+{% set active_page = "chess" %}
+
+
+{% block title %}
+Chess
+{% endblock %}
+
+
+{% block subtitle %}
+	<br><br>
+	Scraping a Network or 'How To Get Blocked From a Site You Like'
+{% endblock %}
+
+{% block source %}
+	<a href="https://github.com/hlud6646/chess">https://github.com/hlud6646/chess</a>
+{% endblock %}
+
+
+
+
+{% block words %}
+
+<pre>
+		<code class="python">	from queue import Queue
+	from threading import Thread
+	from bs4 import BeautifulSoup
+	import sqlite3</code></pre>
+	<br>
+
+	I play chess online and noticed that on each user's profile there is a list of all their previous games.
+	I thought it would be fun to scrape some of this network and see if there's anything interesting.
+	Unfortunately I went overboard and got myself blocked from the lichess server.
+	I didn't when I set out on this that web-scraping can have a bad smell attached to it...
+
+	<br><br>
+
+	The flow of the program is like this:
+	<br><br>
+
+	<ol>
+		<li>
+			Set up a database with a table of games, containing
+			<ol type='id'>
+				<li>An id;</li>
+				<li>Name and rating of white;</li>
+				<li>Same for black;</li>
+				<li>The result;</li>
+				<li>The opening</li>
+			</ol>
+			and a table of users containing
+			<ol type='i'>
+				<li>Their username;</li>
+				<li>Their country;</li>
+			</ol>
+		</li>
+		<br>
+		<li>
+			Initiate a queue of users whose games have not yet been collected.  These are the opponents of 
+			users in games that  <i>have</i> already been collected. The query for this is like
+			<pre><code class='SQL'>	SELECT DISTINCT t1.w_name
+	FROM games t1
+	LEFT JOIN users t2 ON t2.name = t1.w_name
+	WHERE t2.name IS NULL 
+	ORDER BY RANDOM()
+	LIMIT 20</code></pre>
+		</li>
+		<br>
+		<li>
+			Go through these, scraping the games for each.  Since almost all the time is spent waiting for a server responses, each name is processed in a new thread.
+			To protect the database, rather than writing parsed games straight away, the outputs of the scrapers 
+			are put into another queue. When all the names have been processed, everything in this second queue
+			is written to the database.
+		</li>
+		<br>
+		<li>
+			Go back to 2.
+		</li>
+
+	</ol>
+
+	<br>
+	The nice thing about python's synchronous Queue is that it hides all of the locking routines in the background 
+	and only asks that you tell it when tasks in the queue are finished, and when it is safe for the main thread 
+	to continue.
+	Here's the worker function:
+
+	<pre><code>	def worker(names, games):
+		name = names.get()
+		for g in find_games(name):
+			gid = g.find('a')['href'].split('/')[1] # extract the game id
+			try:
+				g = parse(g)
+			except Exception:
+				print(f'Failed to parse {gid}')
+				names.task_done()
+				raise
+			games.put(g)
+		names.task_done()</code></pre>
+	If the parse is successful, the result goes in the 'games' queue.  If it fails, it just print the error and moves on,
+	but only after telling the 'names' queue that the job is finished (albeit unsuccessfully).
+	By the way, the 'find_games' function called in the worker just returns a tuple of the seven 
+	attributes of a game as recorded in the games table.
+
+	<br><br>
+	All the main function has to do now is create an empty queue to hold parsed games, launch the threads,
+	wait till they are all done then write the results to the database:
+	<pre><code>	def get_games(names, connection, num_threads=20):
+		games = Queue()
+		for i in range(num_threads):
+			if names.empty():
+				break
+			t = Thread(target=worker, args=(names, games))
+			t.daemon = True
+			t.start()
+
+		names.join()
+
+		while not games.empty():
+			g = games.get()
+			with connection:
+				cursor = connection.cursor()
+				query  = "INSERT OR IGNORE INTO games VALUES(?,?,?,?,?,?,?)"
+				cursor.execute(query, g)</code></pre>
+	The line 'names.join()' is what what forces the main thread to wait until every call to 
+	'names.get()' is balanced by a call to 'names.task_done()'.
+
+	<br>
+	Finally to let the collection run on continuously, steps 2-4 in the outline above correspond to the
+	ultra simple loop:
+	<pre><code>	while True:
+		names = init_names_queue(connection, num_threads)
+		get_games(names, connection, num_threads)</code></pre>
+
+
+
+	This is simplest way I could find to combine mutithreaded data retrieval with database writes.
+	It grabbed 3000 or so games in the few minutes that the program survived before the server got spooked and killed the connection.
+
+{% endblock %}
+

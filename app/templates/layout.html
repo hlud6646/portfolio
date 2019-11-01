@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+
+
+	<head>
+
+		<meta charset="utf-8">
+		<title>{% block title %}{% endblock %}</title>
+
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+
+		<!-- Home cooked CSS -->
+	    <link href="static/css/mine.css" rel="stylesheet">
+
+	    <!-- Code Highlighting from highlight.js
+	    Is there a cleaner way? -->
+	    <link rel="stylesheet"
+	      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/styles/default.min.css">
+		<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/highlight.min.js"></script>
+		<script>hljs.initHighlightingOnLoad();</script>
+		<script>c = document.querySelectorAll('code');for(i = 0; i < c.length; i++){var code = c[i].innerText;c[i].innerHTML = hljs.highlight('python', code).value;}</script>
+
+	    <!-- Favicon -->
+	    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+
+	</head>
+
+
+
+
+
+	<body>
+		<!-- Container for the whole body. -->
+		<div class="container">
+
+
+
+
+
+
+			<!-- Socials icons in top right of browser. -->
+			{% set socials = [	
+				('gmail', 'mailto:hugo.ludemann@gmail.com'),
+				('github','https://github.com/hlud6646'),
+				('hackerrank', 'https://www.hackerrank.com/hugo_ludemann') ]-%}
+			<div id="socials-container">
+				<div id="socials-toolbar">
+					{% for name, href in socials %}
+						<a href="{{href}}"><img src="/static/images/{{name}}.png"></a>
+					{% endfor %}
+				</div>
+			</div>
+
+
+
+
+
+			<!-- Navigation bar. -->
+			{% set navigation_bar = [
+					( '/', 'index', 'Index' ),
+					( '/three_body', 'three_body', 'Three-Body Demo'),
+					( '/game_of_life', 'game_of_life', 'Game of Life'),
+					( '/odes', 'odes', 'ODE Visulaiser'),
+					( '/chess', 'chess', 'Chess Network'),
+					( '/lasers', 'lasers', 'Lasers'),] -%}
+			<div class="navigation_bar">
+				<ul>{% for href, id, caption in navigation_bar %}
+					<li><a {% if id==active_page %} class="active" {% endif %} href="{{href}}"> {{caption}} </a></li>
+				{% endfor %}</ul>
+			</div>
+
+
+
+
+
+
+
+			<!-- Non-generic content. -->
+			<div class="main_body">
+
+				<span class="stream_wrapper">
+					{% block visualisation %}{% endblock %}				
+				</span>
+
+				<h3>{% block subtitle %}{% endblock %}</h3>
+
+				<h6 class="source">{% block source %}{% endblock %}</h6>
+
+				<p> {% block words %}{% endblock %}</p>
+				
+			</div>	
+
+
+
+
+			<!-- Footer. -->
+			<footer>Thanks for reading!</footer>
+
+		</div>
+	</body>
+
+
+
+</html>

@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+{% set active_page = "game_of_life" %}
+
+
+{% block title %}
+Conway's Game of Life
+{% endblock %}
+
+
+{% block visualisation %}
+	<img src='{{ url_for("stream", title="game_of_life") }}'>
+{% endblock %}
+
+
+{% block subtitle %}
+	Conway's Cellular Automata
+{% endblock %}
+
+{% block source %}
+	<a href="https://github.com/hlud6646/GOL">https://github.com/hlud6646/GOL</a>
+{% endblock %}
+
+
+{% block words %}
+	I've wanted to make a home cooked visualisation of Conway's Game of Life for a while now.
+	GOL is a model of cellular life where the biosphere evolves according to the following four rules:
+	<ol>
+		<li>Any live cell with fewer than two neighbours dies of loneliness.</li>
+		<li>Any live cell with two or three neighbours lives on to the next day.</li>
+		<li>Any live cell with more than three neighbours dies by overcrowding.</li>
+		<li>Any dead cell with exactly three live neighbours becomes a live cell, by a <i>ménage</i>.</li>
+	</ol>
+
+	The only interesting thing about this project is the function that updates the state.  I followed a few blogs which all end up taking the same route, which is more or less to store the state as a boolean array, 
+	count the live neighbours of each cell by applying a 2d matrix convolution and then update the state 
+	based on a series of nested np.where() calls.  Here it is:
+
+
+	<!--  CHECK THAT THIS IS THE MOSE RECENT CODE -->
+	<pre>
+		<code class="python">
+	import numpy as np
+	from scipy.signal import convolve2d
+	...
+	def evolve(state):
+	kernel = np.array([1, 1, 1, 1, 0, 1, 1, 1, 1]).reshape((3, 3))
+	neighbours = convolve2d(state, kernel, mode='same')
+
+	death_rule = np.logical_and(state,  np.logical_or(neighbours<2, neighbours>3))
+	birth_rule = np.logical_and(~state, neighbours==3)
+	lives_rule = np.logical_and(state,  np.logical_or(neighbours==2, neighbours==3))
+
+	return np.where( death_rule, 0,
+					np.where( lives_rule, 1,
+		  						np.where(birth_rule, 1, state)))</code></pre>
+
+{% endblock %}
