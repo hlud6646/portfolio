@@ -89,14 +89,14 @@ class Camera(object):
 
     def _thread(self):
         """ Collect input. """
-        print(f'Starting camera thread {self.thread.ident}')
+        # print(f'Starting camera thread {self.thread.ident}')
         for frame in self.frames():
             self.frame = frame
             self.event.set()                                            # Send signal to clients
             time.sleep(0)
 
             if time.time() - self.last_access > 3:                      # If nobody has asked for a frame shut it down.
-                print(f'Stopping camera thread {self.thread.ident} due to inactivity.')
+                # print(f'Stopping camera thread {self.thread.ident} due to inactivity.')
                 break
         self.thread = None
 
