@@ -1,24 +1,24 @@
-bind 			= '127.0.0.1:8000'
-worker_class 	= 'gevent'
+bind            = '127.0.0.1:8000'
+worker_class    = 'gevent'
 
 
 
 # Dev settings.
 
-#	Restart on changes to source. 	
+#   Restart on changes to source.   
 reload = True
 
-#	Help.
+#   Help.
 spew = False
 
 
 
 # Logs
 
-accesslog 			= 'log/gunicorn_access.log'
-errorlog 			= 'log/gunicorn.log'
-loglevel			= 'debug'
-access_log_format 	= '%(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"'
+accesslog           = 'log/gunicorn_access.log'
+errorlog            = 'log/gunicorn.log'
+loglevel            = 'debug'
+access_log_format   = '%(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"'
 
 
 
