@@ -1,11 +1,9 @@
 {% extends "layout.html" %}
 {% set active_page = "chess" %}
 
-
 {% block title %}
 Chess
 {% endblock %}
-
 
 {% block subtitle %}
 	<br><br>
@@ -16,12 +14,8 @@ Chess
 	<a href="https://github.com/hlud6646/chess">https://github.com/hlud6646/chess</a>
 {% endblock %}
 
-
-
-
 {% block words %}
-
-<pre>
+	<pre>
 		<code class="python">	from queue import Queue
 	from threading import Thread
 	from bs4 import BeautifulSoup
@@ -31,7 +25,7 @@ Chess
 	I play chess online and noticed that on each user's profile there is a list of all their previous games.
 	I thought it would be fun to scrape some of this network and see if there's anything interesting.
 	Unfortunately I went overboard and got myself blocked from the lichess server.
-	I didn't when I set out on this that web-scraping can have a bad smell attached to it...
+	I didn't know when I set out on this that web-scraping can have a bad smell about it...
 
 	<br><br>
 
@@ -135,7 +129,6 @@ Chess
 
 
 	This is simplest way I could find to combine mutithreaded data retrieval with database writes.
-	It grabbed 3000 or so games in the few minutes that the program survived before the server got spooked and killed the connection.
-
+	I know it's not perfect, since one normally tries to avoid bloking routines in async processes but it still
+	grabbed 3000 or so games in the few minutes that the program survived before the server got spooked and killed the connection.
 {% endblock %}
-

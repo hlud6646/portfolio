@@ -1,34 +1,30 @@
 {% extends "layout.html" %}
 {% set active_page = "three_body" %}
 
-
 {% block title %}
 Three-Body Demo
 {% endblock %}
-
 
 {% block visualisation %}
 	<img src='{{ url_for("stream", title="three_body") }}'>
 {% endblock %}
 
-
 {% block subtitle %}
 	Three Body Demo with Random Initial Locations
 {% endblock %}
-
 
 {% block source %}
 	<a href="https://github.com/hlud6646/three_body">https://github.com/hlud6646/three_body</a>
 {% endblock %}
 
-
 {% block words %}
-	I found that the inverse of the distance between two masses, rather than that distance squared made a more interesting image.
-	So this is not stricly physical but if you watch for long enough you can see some almost stable orbits appear.
-	It's also cool that since the masses begin at rest (and within the visual frame), their center of mass is at a fixed point within the frame.
-	That mean's that no matter how far they are flung out of the frame they will always make it back to entertain me.
+	I found that the inverse of the distance between two masses, 
+	rather than that distance squared made a more interesting image.
+	So this is not stricly physical but if you watch for long enough
+	you can see some nice sort-of-stable orbits appear.
 
-	What I learnt here was custom data types in numpy, which are arrays that have really clean access like a dictionary:
+	What I learnt here was custom data types in numpy, 
+	which are arrays that have clean access like a dictionary:
 
 	
 	<!--  CHECK THAT THIS IS THE MOSE RECENT CODE -->
@@ -65,6 +61,4 @@ def update(state):
 
 It would be fun to pass the chosen potential (here 1/d) as an argument to the _force function to see what 
 weird/time dependent potentials look like in action.
-
-
 {% endblock %}

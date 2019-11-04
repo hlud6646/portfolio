@@ -7,8 +7,8 @@ dt = 10**-2.8
 
 def init_state(A=None):
     A           = A or np.random.randint(-4, 4, (2, 2))
-    z           = (np.random.rand(2, N)-.5)  # z lies in (-.5, .5)
-    color       = np.random.uniform(0, .9, (N, 3))*100
+    z           = (np.random.rand(2, N) - .5)  # z lies in (-.5, .5)
+    color       = np.random.uniform(0, .9, (N, 3)) * 100
     return (A, z, color)
 
 def update(z, A):

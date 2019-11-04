@@ -1,39 +1,42 @@
 {% extends "layout.html" %}
 {% set active_page = "lasers" %}
 
-
 {% block title %}
 Reflections of a Laser
 {% endblock %}
-
 
 {% block visualisation %}
 	<img src='{{ url_for("stream", title="lasers") }}'>
 {% endblock %}
 
-
 {% block source %}
 	<a href="https://github.com/hlud6646/lasers">https://github.com/hlud6646/lasers</a>
 {% endblock %}
-
-
-
 
 {% block subtitle %}
 	Reflections of a Laser
 {% endblock %}
 
-
 {% block words %}	
-	There's a law of optics that the angle between an incoming ray and the normal to the reflective surface 
-	is the same as between the outgoing ray and that normal.  So if you know the shape of the surface then it's easy
-	to model the path that the light takes. 
-	This is apparantly useful for building 'multipass spectroscopic absorption cells'. It's a good wiki.
-	This model is of an exaggerated 'elliptical multiplass cell.'  The idea is that there is a small aperture where the ray can enter
-	the cell, where it bounces around until it comes back to the opening.  When it leaves, the configuration resets with a new eccentricity and a new incoming angle.
-	<br>
-	I thought I wanted to make this video tidier, with rays moving at unit speed rather than appearing all at once, with better drawn lines etc.
-	but there's a lot of joy in the pattern's that come out while the rays criss cross themselves so for now I'm leaving it.  
-	<br>
-	It looks to me like if the light enters on a path taking it between the foci then it is bound to stay there and carve out some hyperbola, while if the it's entry takes it between the ellipse and one focus then it will stay close to the edge and carve out a scaled down version of the ellipse.
+	There's a law of optics that the angle between an incoming ray 
+	and the normal to the reflective surface is the same as between
+	the outgoing ray and that normal.  So if you know the shape of 
+	the surface then it's easy to model the path that the light takes. 
+	This is apparantly useful for building 'multipass spectroscopic 
+	absorption cells'. It's a good wiki. This model is of an exaggerated 
+	'elliptical multiplass cell.'  The idea is that there is a small
+	aperture up the top where the ray can enter the cell, where it then 
+	bounces around until it comes back to that opening.  
+	When it leaves, the configuration resets with a new eccentricity 
+	and a new incoming angle.
+	<br><br>
+	I thought I wanted to make this video tidier, with rays moving at 
+	unit speed rather than appearing all at once, with better drawn lines etc.
+	but there's a lot of joy in the pattern's that come out while the rays
+	criss cross themselves so for now I'm leaving it.  It looks to me 
+	like if the light enters on a path taking it between the foci then 
+	it is bound to stay there and carve out some hyperbola, while if
+	it's entry takes it between the ellipse and one focus then it will
+	stay close to the edge and carve out a similar version of the 
+	bounding ellipse.
 {% endblock %}
