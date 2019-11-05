@@ -28,7 +28,7 @@ def index():
 
 @app.route('/<title>')
 def page(title):
-    if title in 'lasers game_of_life three_body odes':
+    if title in 'lasers game_of_life three_body odes chess':
         return render_template(title + '.html')
     else:
         abort(404)
