@@ -1,5 +1,5 @@
 import time
-from flask import Flask, Response, render_template
+from flask import Flask, Response, render_template, abort
 from cameras.base_camera import Camera
 from cameras import lasers, game_of_life, three_body, odes
 
@@ -28,13 +28,31 @@ def index():
 
 @app.route('/<title>')
 def page(title):
-    return render_template(title + '.html')
+    if title in 'lasers game_of_life three_body odes':
+        return render_template(title + '.html')
+    else:
+        abort(404)
 
 @app.route('/stream/<title>')
 def stream(title):
     cameras[title].poke()
     return Response(jpeg(cameras[title]), 
         mimetype='multipart/x-mixed-replace; boundary=frame')
+
+@app.route('/blog')
+def blog():
+    abort(500)
+
+
+
+@app.errorhandler(404)
+def not_found_error(error):
+    return render_template('/error/404.html'), 404
+
+@app.errorhandler(500)
+def internal_error(error):
+    return render_template('/error/500.html'), 500
+
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
 
