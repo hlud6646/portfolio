@@ -11,13 +11,9 @@
 		<!-- Home cooked CSS -->
 	    <link href="static/css/mine.css" rel="stylesheet">
 
-	    <!-- Code Highlighting from highlight.js
-	    Is there a cleaner way? -->
-	    <link rel="stylesheet"
-	      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/styles/default.min.css">
-		<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/highlight.min.js"></script>
-		<script>hljs.initHighlightingOnLoad();</script>
-		<script>c = document.querySelectorAll('code');for(i = 0; i < c.length; i++){var code = c[i].innerText;c[i].innerHTML = hljs.highlight('python', code).value;}</script>
+		<!-- Highlighting from prism.js. -->
+		<link href="static/css/prism.css" rel="stylesheet" />
+		<script src="static/javascript/prism.js"></script>
 
 	    <!-- Favicon -->
 	    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">

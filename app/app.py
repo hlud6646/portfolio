@@ -1,5 +1,6 @@
 import time
 from flask import Flask, Response, render_template, abort
+from jinja2.exceptions import TemplateNotFound
 from cameras.base_camera import Camera
 from cameras import lasers, game_of_life, three_body, odes
 
@@ -28,9 +29,13 @@ def index():
 
 @app.route('/<title>')
 def page(title):
+<<<<<<< HEAD
     if title in 'lasers game_of_life three_body odes chess':
+=======
+    try:
+>>>>>>> blog
         return render_template(title + '.html')
-    else:
+    except TemplateNotFound as e:
         abort(404)
 
 @app.route('/stream/<title>')
@@ -39,9 +44,12 @@ def stream(title):
     return Response(jpeg(cameras[title]), 
         mimetype='multipart/x-mixed-replace; boundary=frame')
 
-@app.route('/blog')
-def blog():
-    abort(500)
+@app.route('/blog/<title>')
+def blog(title):
+    try:
+        return render_template('blog/' + title + '.html')
+    except TemplateNotFound as e:
+        abort(404)
 
 
 

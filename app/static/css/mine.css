@@ -27,6 +27,10 @@ body {
 	background-color: #FFFFFF;
 }
 
+header {
+	padding-top: 10px;
+}
+
 footer {
 	position: absolute;
 	bottom: 0;
@@ -110,17 +114,12 @@ footer {
 }
 
 
-
-
-
-
-
-
 .stream_wrapper img {
 	padding: 20px 0;
 }
 
 
 
-
-
+#pf div{
+	display: inline;
+}
