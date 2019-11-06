@@ -114,17 +114,12 @@ footer {
 }
 
 
-
-
-
-
-
-
 .stream_wrapper img {
 	padding: 20px 0;
 }
 
 
 
-
-
+#pf div{
+	display: inline;
+}

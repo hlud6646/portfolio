@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+		<title>{% block title %}{% endblock %}</title>
+
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+
+		<!-- Home cooked CSS -->
+	    <link href="../static/css/mine.css" rel="stylesheet">
+
+		<!-- Highlighting from prism.js. -->
+		<link href="../static/css/prism.css" rel="stylesheet" />
+		<script src="../static/javascript/prism.js"></script>
+
+	    <!-- Favicon -->
+	    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+	</head>
+
+
+	<body>
+		<!-- Container for the whole body. -->
+		<div class="container">
+			<header>{% block header %}{% endblock %}</header>
+			<h2>{% block subtitle %}{% endblock %}</h2>
+			<p> {% block words %}{% endblock %}</p>
+			<footer>Thanks for reading!</footer>
+		</div>
+	</body>
+</html>
