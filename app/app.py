@@ -29,11 +29,7 @@ def index():
 
 @app.route('/<title>')
 def page(title):
-<<<<<<< HEAD
-    if title in 'lasers game_of_life three_body odes chess':
-=======
     try:
->>>>>>> blog
         return render_template(title + '.html')
     except TemplateNotFound as e:
         abort(404)
