@@ -1,0 +1,93 @@
+{% extends "/blog/layout.html" %}
+
+{% block title %}
+	14-11-2019
+{% endblock %}
+
+{% block header %}
+	$$ D(f \circ g)(a) = Df(g(a)) \circ Dg(a) $$
+{% endblock %}
+
+{% block subtitle %}
+	A Note on Derivatives.
+{% endblock %}
+
+{% block words %}	
+	This is a small note intended to clarify my understanding on the derivative.
+	It's a topic that I feel I understood less and less through three years of 
+	studying maths at uni and so the time to fix that is long overdue.
+	<br><br>
+
+	In high school you learn how to calculate derivatives for a few kinds of real
+	 endomorphisms and certain combinations of the same.  That was never too much of 
+	a problem.  In first year uni you do partial derivatives, which is a completly
+	straighforward extension of the high school derivative and then you get 
+	told that the derivative for a function between Euclidean spaces is a certain 
+	matrix of that function's partial derivatives.  This also is not too bad, 
+	although the notions of 'rate of change' or 'steepness' definitely start to 
+	lose meaning.  Probably for functions between two spaces larger than 
+	$\mathbb{R}$ the meaning of the derivative is pretty well lost.
+	<br><br>
+
+	Eventually you start to look at functions without referring to a specific basis.  
+	Nobody ever tried to motivate this extra level of abstraction and after 
+	learning how to orthonormalise any basis it seems strange that you would ever
+	need to consider non-standard ones.  Around the same time some courses start to 
+	make use of the 'total derivative' given with reference to 'infinitesimals' which 
+	aren't defined and the chain rule starts to look more bizarre every day.
+	One of the unavoidable challenges of the subject is that each instructor has a 
+	prefered style and notation.  When $\bar{x}$ is a vector things like 
+	$\frac{d}{d \bar{x}} f$ were really too much for me.  Here's the setup that I'm 
+	going to try to stick to, from <i>Calculus on Manifolds</i> by Michael Spivak.
+
+	<div class="definition">
+	For a function $f$ from $\mathbb{R}^n$ to $\mathbb{R}^m$, the derivative at $a$, 
+	if it exists, is the linear map $\lambda$ such that 
+	$$ \lim_{|h|\to0} \frac{|f(a + h) - f(a) - \lambda(h)|}{|h|} = 0.$$
+	</div>
+	One can show that if such a $\lambda$ exists then it is unique which justifies 
+	the choice of language in the above definition ('<i>the</i> derivative').  For the equation above to make 
+	any sense $\lambda$ must have the same domain and codomain as the function we
+	started with and most texts would probably make that explicit in the definition.
+	We reserve the label $Df(a)$ for the map $\lambda$ and remember that we have made no 
+	mention of the basis chosen for either space.
+
+
+	The main theorem at this stage is the chain rule, which says 
+		that
+	<div class="theorem">
+		for functions
+		$g : \mathbb{R}^{n \to m}$ and $f : \mathbb{R}^{m \to p}$ the derivative of 
+		$f \circ g$ at $a$ is 
+		$$ D(f \circ g)(a) = Df(g(a)) \circ Dg(a) $$
+		so long as $g$ is differentiable at $a$ and $f$ is differentiable at $g(a)$.
+	</div>
+
+	This is all still abstract though so before we calculate any actual 
+	derivatives it makes sense to introduce some notation for when we are working with 
+	the standard bases.
+
+	<div class="definition">
+		The $\textit{Jacobian Matrix}$ of $f$ at $a$ is the matrix representation of 
+		$Df(a)$ with respect to the standard bases and is denoted by $f'(a)$.
+	</div>
+
+	This was somtimes given the symbol $J(f)$ in earlier courses and was defined 
+	then as the matrix of all partial derivates.  Obviously the definitions are 
+	equivalent but stick to this one and let it be a happy consequence that one can
+	compute $f'(a)$ so easily.  In this form the chain rule becomes 
+	$$ (f \circ g)'(a) = f'(g(a)) \cdot g'(a) $$ where we use a dot now to indicate
+	matrix multiplication rather than a circle to indicate composition.
+	As an example of the difference in application between the two, one can show that
+	the derivative of the inner product on $ \mathbb{R}^n$ denoted
+	$ I(x, y)  = \langle x, y \rangle$ satisfies 
+	$ DI(a, b)(x, y) =  I(a, y) + I(x, b)$, with no mention of bases at all.
+
+
+
+
+
+
+
+
+{% endblock %}

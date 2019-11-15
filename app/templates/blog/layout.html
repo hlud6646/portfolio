@@ -10,10 +10,22 @@
 
 		<!-- Home cooked CSS -->
 	    <link href="../static/css/mine.css" rel="stylesheet">
+	    <link href="../static/css/math.css" rel="stylesheet">
 
 		<!-- Highlighting from prism.js. -->
 		<link href="../static/css/prism.css" rel="stylesheet" />
 		<script src="../static/javascript/prism.js"></script>
+
+		<!-- Equation formatting from mathjax-->
+		<script type="text/x-mathjax-config">
+		  MathJax.Hub.Config({
+		    tex2jax: {
+		      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+		      processEscapes: true
+		    }
+		  });
+		</script>
+		<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
 	    <!-- Favicon -->
 	    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
