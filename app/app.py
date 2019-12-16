@@ -1,5 +1,5 @@
 import time
-from flask import Flask, Response, render_template, abort
+from flask import Flask, Response, render_template, abort, send_from_directory
 from jinja2.exceptions import TemplateNotFound
 from cameras.base_camera import Camera
 from cameras import lasers, game_of_life, three_body, odes
