@@ -1,0 +1,192 @@
+{% extends "layout.html" %}
+{% set active_page = "deep_learning" %}
+
+{% block title %}
+Flowers
+{% endblock %}
+
+{% block subtitle %}
+	<br><br>
+	Image Recognition with Tensorflow and keras.
+	<img src="/static/images/flowers1.png" alt="sd" width=100%>
+
+{% endblock %}
+
+{% block source %}
+	<a href="https://github.com/hlud6646/ds/blob/master/Templates/Image%20Classification%20Example.ipynb">https://github.com/hlud6646/ds/blob/master/Templates/Image Classification Example.ipynb</a>
+{% endblock %}
+
+
+{% block words %}
+
+
+	This is the first real machine learning project I've written.  It is an image classifier for 
+	five different types of flowers.  There's a lot of room for improvement in the model design but
+	the focus so far has been building a good workflow as a foundation.  It runs like this:
+
+	<ol>
+		<li>The dataset used for this project initially has the structure 
+			<pre>
+			flowers
+			 -> daisy
+			 -> ...
+			 -> tulip
+			</pre>
+			but the required structure is 
+			<pre>
+			flowers 
+			 -> train
+			     -> daisy
+			     -> ...
+			     -> tulip
+			 -> test
+			     -> daisy
+			     -> ...
+			     -> tulip
+			</pre>
+			Reorganising the data is achieved with a script like 
+			<pre><code class="language-python">from pathlib import Path
+import shutil
+from numpy.random import random
+
+p = Path('.')
+(p / 'train').mkdir()
+(p / 'valid').mkdir()
+
+validation_split = 0.2
+
+for species in 'daisy dandelion rose sunflower tulip'.split():
+	(p / 'train' / species).mkdir()
+	(p / 'valid' / species).mkdir()
+	for img in (p / species).iterdir():
+		if random() < validation_split:
+			shutil.copy(str(img), str(p / 'valid' / img))
+		else: 
+			shutil.copy(str(img), str(p / 'train' / img))
+	shutil.rmtree(p / species)</code></pre>
+			The same can be achieved by setting the 
+			<code class="language-python">validation_split</code> argument in the 
+			<code class="language-python">keras.ImageDataProcessor</code> used to buffer input data
+			but I'm ok with doing this beforehand.
+		 </li>
+		 <li>
+		 	Images are loaded (more precicely, configured to be loaded into a flow) in a 
+		 	<code class="language-python">keras.ImageDataProcessor</code>.
+		 	This method is cool because it allows 
+		 	data augmentation to take place with only a few keystrokes.  The idea is that, for a 
+		 	collection of flowers, you could flip the occasional one left to right and you'd get a 
+		 	perfectly reasonable image that could also be used to train the model.  I'm not sure if this
+		 	helps the model (which is trained on around 3000 images) but it's cool and definitely good for 
+		 	small datasets.  This all happens as follows:
+		 	<pre><code class="language-python"># Variables shared beteween training and validation flows.
+prefix = './data/flowers/'
+train_path = prefix + 'train'
+valid_path = prefix + 'valid'
+target_size = (150, 150)
+
+def preprocess_image(image):
+    """ From docs for ImageDataGenerator:
+            function that will be applied on each input. 
+            The function will run after the image is resized and augmented. 
+            The function should take one argument: one image (Numpy tensor with rank 3), 
+            and should output a Numpy tensor with the same shape.
+        This example normalizes 8bit RGB."""
+    return image / 255
+
+# Data augmentation tidily handled by passing args to this constructor.
+data_generator = ImageDataGenerator(
+    preprocessing_function=preprocess_image,
+    vertical_flip=False,
+    horizontal_flip=True)
+
+train_generator = data_generator.flow_from_directory(
+    train_path,
+    target_size=target_size)
+
+valid_generator = data_generator.flow_from_directory(
+    valid_path,
+    target_size=target_size)</code></pre>
+		 </li>
+		 <li>
+		 	It's nice to have a look at the data before going into the deeper stuff. This code genreates the image at the top of the page:
+		 	<pre><code class="language-python"># Display one image from each class, with the supplied label.
+images = []
+labels = []
+for species in [x for x in Path(train_path).iterdir() if x.is_dir()]:
+    labels.append(species.name)
+    species_list = list(species.iterdir())
+    image_path = species_list[np.random.randint(len(species_list))]
+    images.append(mpimg.imread(image_path))
+
+fig, ax = plt.subplots(1, 5, figsize=(20, 10))
+for i, image in enumerate(images):
+    ax[i].imshow(image)
+    ax[i].set_title(labels[i])
+    ax[i].axis('off')
+plt.savefig('flowers1')</code></pre>
+		 </li>
+		 <li>
+		 	The model needs to be instantiated and configured before it is trained and used.  This is where the real work is.  The rest is basically setup, so natrually this is the part that I understand the least.  
+		 	<pre><code class="language-python">model = Sequential()
+num_classes = 5
+
+# Input layer.
+model.add(Conv2D(16, kernel_size=(3, 3), activation='relu',))
+
+# Hidden layers.
+for layer in [
+    Conv2D(30, (3, 3), activation='relu', strides=3),
+    Dropout(.5),
+    Flatten(),
+    Dense(128, activation='relu'),]:
+    model.add(layer)
+
+# Output layer.
+model.add(Dense(units=num_classes, activation='softmax'))
+
+model.compile(loss='categorical_crossentropy',
+              optimizer='adam',
+              metrics=['accuracy'])
+model.fit(
+    train_generator,
+    epochs=3,
+    validation_data=valid_generator,
+    )</code></pre>
+		 </li>
+		 <li>
+		 	The model is ready to make some predictions now.  The following code predicts the type of 
+		 	flower some pictures that I got from google images.  Some of the flowers are different classes 
+		 	to the five displayed at the top, i.e. classes that the model has never heard of.  Lots of 
+		 	improvement to come but it's a start.
+		 </li>
+		 <pre><code class="language-python"># Visualise some predictions. I grabbed these from google images. Some could be in the training 
+# set but I would expect most to be fresh.  Some of the flowers belong to classed that the model
+# doesn't know.
+
+def predict(image_path):
+    """ Make predictions one at a time."""
+    image = load_img(image_path, target_size=target_size)
+    y_array = model.predict(np.expand_dims(preprocess_image(img_to_array(image)), axis=0))
+    return 'daisy dandelion rose sunflower tulip'.split()[y_array.argmax(axis=-1)[0]]    
+
+image_paths = Path('./data/flowers/test').iterdir()
+
+fig, ax = plt.subplots(5, 5, figsize=(20, 10))
+for i, path in enumerate(image_paths):
+    if i >= 25:
+        break
+    ax[i // 5, i % 5].imshow(mping.imread(path))
+    ax[i // 5, i % 5].set_title(predict(path))
+    ax[i // 5, i % 5].axis('off')
+plt.savefig('flowers2')</code></pre>
+	<img src="/static/images/flowers2.png" alt="sd" width=100%>
+	</li>
+
+
+
+
+
+{% endblock %}
+
+
+
