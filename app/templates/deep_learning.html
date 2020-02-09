@@ -9,7 +9,6 @@ Flowers
 	<br><br>
 	Image Recognition with Tensorflow and keras.
 	<img src="/static/images/flowers1.png" alt="sd" width=100%>
-
 {% endblock %}
 
 {% block source %}
@@ -20,9 +19,16 @@ Flowers
 {% block words %}
 
 
+
+
+
+
+
+
+
+
 	This is the first real machine learning project I've written.  It is an image classifier for 
-	five different types of flowers.  There's a lot of room for improvement in the model design but
-	the focus so far has been building a good workflow as a foundation.  It runs like this:
+	five different types of flowers.  There's a lot of room for improvement in the model design (accuracy is around 60%) but the focus so far has been building a good workflow as a foundation.  It runs like this:
 
 	<ol>
 		<li>The dataset used for this project initially has the structure 
@@ -30,8 +36,7 @@ Flowers
 			flowers
 			 -> daisy
 			 -> ...
-			 -> tulip
-			</pre>
+			 -> tulip</pre>
 			but the required structure is 
 			<pre>
 			flowers 
@@ -42,10 +47,15 @@ Flowers
 			 -> test
 			     -> daisy
 			     -> ...
-			     -> tulip
-			</pre>
+			     -> tulip</pre>
 			Reorganising the data is achieved with a script like 
-			<pre><code class="language-python">from pathlib import Path
+
+
+
+
+
+
+<pre><code class="language-python">from pathlib import Path
 import shutil
 from numpy.random import random
 
@@ -64,21 +74,45 @@ for species in 'daisy dandelion rose sunflower tulip'.split():
 		else: 
 			shutil.copy(str(img), str(p / 'train' / img))
 	shutil.rmtree(p / species)</code></pre>
+
+
+
+
+
+
+
 			The same can be achieved by setting the 
 			<code class="language-python">validation_split</code> argument in the 
 			<code class="language-python">keras.ImageDataProcessor</code> used to buffer input data
 			but I'm ok with doing this beforehand.
 		 </li>
+
+
 		 <li>
 		 	Images are loaded (more precicely, configured to be loaded into a flow) in a 
 		 	<code class="language-python">keras.ImageDataProcessor</code>.
 		 	This method is cool because it allows 
-		 	data augmentation to take place with only a few keystrokes.  The idea is that, for a 
+		 	data augmentation to take place with only a few keystrokes.  The idea is that for a 
 		 	collection of flowers, you could flip the occasional one left to right and you'd get a 
-		 	perfectly reasonable image that could also be used to train the model.  I'm not sure if this
-		 	helps the model (which is trained on around 3000 images) but it's cool and definitely good for 
-		 	small datasets.  This all happens as follows:
-		 	<pre><code class="language-python"># Variables shared beteween training and validation flows.
+		 	perfectly reasonable image that could also be used to train the model.
+
+
+
+
+
+
+<pre><code class="language-python">from tensorflow.python.keras.preprocessing.image import ImageDataGenerator, load_img, img_to_array
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Conv2D, Dense, Flatten, Dropout
+
+import numpy as np
+from pathlib import Path
+
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
+%matplotlib inline
+
+# Variables shared beteween training and validation flows.
 prefix = './data/flowers/'
 train_path = prefix + 'train'
 valid_path = prefix + 'valid'
@@ -90,7 +124,7 @@ def preprocess_image(image):
             The function will run after the image is resized and augmented. 
             The function should take one argument: one image (Numpy tensor with rank 3), 
             and should output a Numpy tensor with the same shape.
-        This example normalizes 8bit RGB."""
+        This example normalizes 8bit RGB, since TensorFlow Hub image modules expect floats in [0, 1]."""
     return image / 255
 
 # Data augmentation tidily handled by passing args to this constructor.
@@ -99,23 +133,39 @@ data_generator = ImageDataGenerator(
     vertical_flip=False,
     horizontal_flip=True)
 
-train_generator = data_generator.flow_from_directory(
+train_flow = data_generator.flow_from_directory(
     train_path,
     target_size=target_size)
 
-valid_generator = data_generator.flow_from_directory(
+valid_flow = data_generator.flow_from_directory(
     valid_path,
     target_size=target_size)</code></pre>
 		 </li>
+
+
+
+
+
+
+
+
 		 <li>
 		 	It's nice to have a look at the data before going into the deeper stuff. This code genreates the image at the top of the page:
-		 	<pre><code class="language-python"># Display one image from each class, with the supplied label.
+
+
+
+
+
+
+
+<pre><code class="language-python"># Nice to see some of the data.
+# Display one image from each class, with the supplied label.
 images = []
 labels = []
 for species in [x for x in Path(train_path).iterdir() if x.is_dir()]:
     labels.append(species.name)
-    species_list = list(species.iterdir())
-    image_path = species_list[np.random.randint(len(species_list))]
+    image_paths = list(species.iterdir())
+    image_path = image_paths[np.random.randint(len(image_paths))]
     images.append(mpimg.imread(image_path))
 
 fig, ax = plt.subplots(1, 5, figsize=(20, 10))
@@ -125,9 +175,21 @@ for i, image in enumerate(images):
     ax[i].axis('off')
 plt.savefig('flowers1')</code></pre>
 		 </li>
+
+
+
+
+
+
 		 <li>
 		 	The model needs to be instantiated and configured before it is trained and used.  This is where the real work is.  The rest is basically setup, so natrually this is the part that I understand the least.  
-		 	<pre><code class="language-python">model = Sequential()
+
+
+
+
+
+
+<pre><code class="language-python">model = Sequential()
 num_classes = 5
 
 # Input layer.
@@ -135,7 +197,7 @@ model.add(Conv2D(16, kernel_size=(3, 3), activation='relu',))
 
 # Hidden layers.
 for layer in [
-    Conv2D(30, (3, 3), activation='relu', strides=3),
+    Conv2D(30, (3, 3), activation='relu', strides=5),
     Dropout(.5),
     Flatten(),
     Dense(128, activation='relu'),]:
@@ -144,22 +206,30 @@ for layer in [
 # Output layer.
 model.add(Dense(units=num_classes, activation='softmax'))
 
+epochs = 5
+
 model.compile(loss='categorical_crossentropy',
               optimizer='adam',
               metrics=['accuracy'])
-model.fit(
-    train_generator,
-    epochs=3,
-    validation_data=valid_generator,
+
+history = model.fit(
+    train_flow,
+    epochs=epochs,
+    validation_data=valid_flow,
     )</code></pre>
 		 </li>
+		 
+
+
 		 <li>
-		 	The model is ready to make some predictions now.  The following code predicts the type of 
-		 	flower some pictures that I got from google images.  Some of the flowers are different classes 
-		 	to the five displayed at the top, i.e. classes that the model has never heard of.  Lots of 
-		 	improvement to come but it's a start.
-		 </li>
-		 <pre><code class="language-python"># Visualise some predictions. I grabbed these from google images. Some could be in the training 
+		 	Time to see some predictions.  The following code predicts the type of 
+		 	flower in some pictures that I got from google images.
+
+
+
+
+
+<pre><code class="language-python"># Visualise some predictions. I grabbed these from google images. Some could be in the training 
 # set but I would expect most to be fresh.  Some of the flowers belong to classed that the model
 # doesn't know.
 
