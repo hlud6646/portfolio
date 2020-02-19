@@ -6,7 +6,7 @@ from time import sleep
 # and be a cronjob or something like that rather than a python loop.
 while True:
 	try:
-		data = f'{bom()}, {smh()}, {wzn()}\n'
+		data = str(bom()) + str(smh()) + str(wzn()) + '\n'
 		with open('../data/temperature.csv', 'a+') as f:
 			f.write(data)
 	# This is sinful but it's just a demo...
