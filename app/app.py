@@ -3,6 +3,8 @@ from flask import Flask, Response, render_template, abort, send_from_directory
 from jinja2.exceptions import TemplateNotFound
 from cameras.base_camera import Camera
 from cameras import lasers, game_of_life, three_body, odes
+from util import chart1, chart2
+
 
 
 # ---- Camera utilities and setup. - ---- ---- ---- ---- ---- ---- ----
@@ -46,6 +48,11 @@ def blog(title):
         return render_template('blog/' + title + '.html')
     except TemplateNotFound as e:
         abort(404)
+
+@app.route('/weather')
+def weather():
+    return render_template('/weather/index.html', chart1=chart1.chart(), chart2=chart2.chart())
+
 
 
 

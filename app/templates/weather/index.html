@@ -1,0 +1,64 @@
+{% extends "weather/layout.html" %}
+{% set active_page = "index" %}
+
+
+{% block title %}
+	Sydney Weather
+{% endblock %}
+
+
+{% block subtitle %}
+	Sydney Weather for Correlate Resources
+{% endblock %}
+
+{% block source %}
+	<a href="https://github.com/hlud6646/weather">https://github.com/hlud6646/weather</a>
+{% endblock %}
+
+
+
+
+
+
+
+{% block words %}
+This is a demonstration of a simple aggregate web scraper.
+It uses BeautifulSoup to pull the current temperature in Sydney from 
+the Bureau, the Sydney Morning Herald and WeatherZone.  The scrapers are called every time this page is viewed to draw the bar graph, and once an hour in the background to draw the line graph.  The results are appended to a file rather than written to a database, which is obviously just to simplify the demonstration.
+For ease of reference <a href="https://github.com/hlud6646/weather/blob/master/util/scrapers.py">here is a link to the web scrapers.</a>
+The rest is standard template rendering etc.  This project is just for you guys; I tried to come up with something that addresses the problem posed in the job ad.
+
+
+<div id="chart1" class="chart"></div>
+<script>
+	var args1 = { 
+		"series": 	{{ chart1.series|safe }},
+		"title": 	{{ chart1.title|safe }},
+		"xAxis": 	{{ chart1.xAxis|safe }},
+		"yAxis": 	{{ chart1.yAxis|safe }},
+		"chart": 	{{ chart1.chart|safe }} }
+</script>
+
+
+<div id="chart2" class="chart"></div>
+<script>
+	var args2 = {
+		"series": {{ chart2.series|safe }},
+		"title":  {{ chart2.title|safe  }},
+		"yAxis":  {{ chart2.yAxis|safe  }},
+		"xAxis":  {{ chart2.xAxis|safe  }},
+		"chart":  {{ chart2.chart|safe  }} }
+</script>
+
+
+
+
+
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script src="http://code.highcharts.com/highcharts.js"></script>
+<script src="../static/javascript/graph.js"></script>
+
+
+	{{temps}}
+{% endblock %}
