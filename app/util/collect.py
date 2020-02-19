@@ -6,7 +6,7 @@ from time import sleep
 # and be a cronjob or something like that rather than a python loop.
 while True:
 	try:
-		data = '{0},{1},{2}\n'.format(bom(), smh(), wnz())
+		data = '{0},{1},{2}\n'.format(bom(), smh(), wzn())
 		with open('/home/ubuntu/portfolio/app/data/temperature.csv', 'a+') as f:
 			f.write(data)
 	# This is sinful but it's just a demo...
