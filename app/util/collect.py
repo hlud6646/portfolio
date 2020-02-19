@@ -7,7 +7,7 @@ from time import sleep
 while True:
 	try:
 		data = '{0},{1},{2}\n'.format(bom(), smh(), wnz())
-		with open('../data/temperature.csv', 'a+') as f:
+		with open('/home/ubuntu/portfolio/app/data/temperature.csv', 'a+') as f:
 			f.write(data)
 	# This is sinful but it's just a demo...
 	except Exception as e:
