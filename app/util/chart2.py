@@ -3,7 +3,7 @@ import pandas as pd
 
 
 def chart():
-	df = pd.read_csv('data/temperature.csv')[-12:]
+	df = pd.read_csv('/home/ubuntu/portfolio/app/data/temperature.csv')[-12:]
 	return {
 		'chart' : {
 			'type': 'column'
