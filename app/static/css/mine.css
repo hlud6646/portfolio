@@ -11,7 +11,7 @@ html{ height: 100%;
 	  position: relative;}
 
 body {
-	background-color: #FFFAFC;
+	background-color: #FFFFFC;
 	margin: 0;
 	padding-bottom: 6rem;
 	height: 100%;
@@ -85,7 +85,7 @@ footer {
 	padding: 0;
 	float: left;
 	font-size: 13px;
-	width: 16.6666%;
+	width: 20%;
 	border-left: solid 1px #ccc;
 	position: relative;
 }

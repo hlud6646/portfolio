@@ -1,9 +1,16 @@
-import time
+import time, os
 from flask import Flask, Response, render_template, abort, send_from_directory
 from jinja2.exceptions import TemplateNotFound
+
 from cameras.base_camera import Camera
-from cameras import lasers, game_of_life, three_body, odes
+from cameras import lasers, game_of_life, three_body
 from util import chart1, chart2
+
+
+
+
+app = Flask(__name__)
+
 
 
 
@@ -16,15 +23,15 @@ def jpeg(camera):
 
 cameras = { 'lasers':       Camera(lasers.gen,          fps=30),
             'game_of_life': Camera(game_of_life.gen,    fps=10),
-            'three_body':   Camera(three_body.gen,      fps=80),
-            'odes':         Camera(odes.gen,            fps=100)}
+            'three_body':   Camera(three_body.gen,      fps=80),}
 # ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
- 
 
-# ---- Flask setup. - ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-app = Flask(__name__)
 
+
+
+
+# ---- Routes setup.- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -42,6 +49,12 @@ def stream(title):
     return Response(jpeg(cameras[title]), 
         mimetype='multipart/x-mixed-replace; boundary=frame')
 
+@app.route('/blog')
+def blog_index():
+    posts_paths =  set(os.listdir('./templates/blog'))
+    posts_paths -= set(['blank.html', 'layout.html', 'index.html', 'foo.html'])
+    return Response(str(posts_paths))
+
 @app.route('/blog/<title>')
 def blog(title):
     try:
@@ -49,11 +62,10 @@ def blog(title):
     except TemplateNotFound as e:
         abort(404)
 
+
 @app.route('/weather')
 def weather():
     return render_template('/weather/index.html', chart1=chart1.chart(), chart2=chart2.chart())
-
-
 
 
 @app.errorhandler(404)

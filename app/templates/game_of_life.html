@@ -32,20 +32,7 @@ Conway's Game of Life
 	based on a series of nested 'np.where' calls.  Here it is:
 	<br><br>
 
-	<pre><code class="language-python">	import numpy as np
-	from scipy.signal import convolve2d
-	...
-	def evolve(state):
-		kernel = np.array([1, 1, 1, 1, 0, 1, 1, 1, 1]).reshape((3, 3))
-		neighbours = convolve2d(state, kernel, mode='same')
-
-		death_rule = np.logical_and(state,  np.logical_or(neighbours < 2, neighbours > 3))
-		birth_rule = np.logical_and(~state, neighbours == 3)
-		lives_rule = np.logical_and(state,  np.logical_or(neighbours == 2, neighbours == 3))
-
-		return np.where( death_rule, 0,
-										np.where( lives_rule, 1,
-			  													np.where(birth_rule, 1, state)))</code></pre>
+	<script src="https://gist.github.com/hlud6646/f0fcdee96cbac02505bcf947ef89166c.js"></script>
 
 	Since the game theoretically exists on an infinite plane, most models equate the edges and have 
 	the system evolve on a torus.  This version is a bit simpler, and is just the pictured rectangular
