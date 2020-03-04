@@ -47,21 +47,6 @@ def stream(title):
     )
 
 
-@app.route("/blog")
-def blog_index():
-    posts_paths = set(os.listdir("./templates/blog"))
-    posts_paths -= set(["blank.html", "layout.html", "index.html", "foo.html"])
-    return Response(str(posts_paths))
-
-
-@app.route("/blog/<title>")
-def blog(title):
-    try:
-        return render_template("blog/" + title + ".html")
-    except TemplateNotFound as e:
-        abort(404)
-
-
 @app.route("/weather")
 def weather():
     return render_template(
