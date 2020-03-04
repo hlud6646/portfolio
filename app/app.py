@@ -39,11 +39,11 @@ def page(title):
         abort(404)
 
 
-@app.route("/stream/<title>")
+@app.route("/stream/-<title>")
 def stream(title):
-    cameras[title].poke()
+    cameras[title[1:]].poke()
     return Response(
-        jpeg(cameras[title]), mimetype="multipart/x-mixed-replace; boundary=frame"
+        jpeg(cameras[title[1:]]), mimetype="multipart/x-mixed-replace; boundary=frame"
     )
 
 
